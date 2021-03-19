@@ -1,0 +1,21 @@
+package me.rocky.systemb;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+/**
+ * @author Rocky
+ * @version 1.0
+ * @description
+ * @email inaho00@foxmail.com
+ * @createDate 2021/2/26 16:11
+ * @log
+ */
+@SpringBootApplication
+@EnableDiscoveryClient
+public class SystemApplicationB {
+	public static void main(String[] args) {
+		SpringApplication.run(SystemApplicationB.class);
+	}
+}

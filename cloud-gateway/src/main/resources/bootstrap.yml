@@ -1,0 +1,27 @@
+server:
+  port: 10002
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://192.168.69.1:10003/getPublicKey'
+  application:
+    name: cloud-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.69.150:8848   #单机节点
+        namespace: dev-space
+        username: nacos
+        password: nacos
+        group: DEV_GROUP
+        service: ${spring.application.name}
+        watch:
+          enabled: true
+      config:
+        server-addr: 192.168.69.150:8848
+        namespace: dev-space  #必要
+        group: DEV_GROUP  #必要
+        file-extension: yaml  #必要

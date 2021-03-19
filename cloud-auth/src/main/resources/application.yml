@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: cloud-auth
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://192.168.69.150:3306/db_auth?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2b8
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 3
+      min-idle: 3
+      max-active: 10
+      max-wait: 60000
+      validationQuery: "SELECT 1 FROM DUAL"
+      stat-view-servlet:
+        login-username: admin
+        login-password: admin
+        enabled: true
+      web-stat-filter:
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      filter:
+        log4j2:
+          enabled: true
+        wall:
+          enabled: true
+        stat:
+          enabled: true
+
+weapp:
+  appid: wx063f1fce695463e1
+  secret: 1c127228c2317589ba234ece17df2af0
+
+# 全局参数设置
+ribbon:
+  http:
+    client:
+      enabled: true
+  okhttp:
+    enabled: true
+  restclient:
+    enabled: true
+
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true

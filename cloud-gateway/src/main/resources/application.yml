@@ -1,0 +1,61 @@
+spring:
+  redis:
+    database: 0
+    host: 192.168.69.150
+    port: 6379
+    password: root
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true
+          enabled: true
+      routes:
+        - id: cloud-systema
+          uri: lb://cloud-systema
+          predicates:
+            - Path=/a/**
+          filters:
+            - StripPrefix=1
+        - id: cloud-systemb
+          uri: lb://cloud-systemb
+          predicates:
+            - Path=/b/**
+          filters:
+            - StripPrefix=1
+        - id: cloud-auth
+          uri: lb://cloud-auth
+          predicates:
+            - Path=/cloud-auth/**
+          filters:
+            - StripPrefix=1
+
+# 配置白名单路径(无需登录)
+system:
+  whitelist:
+    urls:
+      - /cloud-auth/oauth/token
+      - /a/test
+      - /webjars/**
+      - /doc.html
+      - /swagger-resources/**
+      - /*/v2/api-docs
+
+# 是否演示环境
+demo: false
+
+# 全局参数设置
+ribbon:
+  ReadTimeout: 120000
+  ConnectTimeout: 10000
+  SocketTimeout: 10000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 40000

@@ -1,0 +1,129 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: "io.spring.dependency-management"
+    group = 'me.rocky'
+    version = '1.0-SNAPSHOT'
+    sourceCompatibility = '1.8'
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    ext {
+        set('springBootVersion', '2.3.7.RELEASE')
+        set('springCloudAlibabaVersion', "2.2.2.RELEASE")
+        set('springCloudVersion', "Hoxton.SR9")
+        set('junitJupiterVersion', '5.5.2')
+        set('junitPlatformLauncherVersion', '1.5.2')
+        set('commonsLangVersion', '3.8.1')
+        set('lombokVersion', "1.18.12")
+        set('jacksonVersion', '2.10.3')
+        set('xstreamVersion', '1.4.12')
+        set('slf4jVersion', '1.7.30')
+        set('yamlVersion', '1.26')
+        set('aspectjVersion', '1.9.5')
+        set('redissonVersion', "3.12.4")
+        set('druidVersion', "1.1.23")
+        set('mybatisPlusVersion', '3.3.1')
+        set('mybatisGeneratorVersion','1.3.7')
+        set('mysqlVersion','8.0.17')
+        set('velocityEngineVersion', '2.2')
+        set('pagehelperSpringVersion', '1.2.13')
+        set('pagehelperVersion', '5.1.11')
+        set('swagger2Version', '2.7.0')
+        set('knife4jVersion', '2.0.2')
+        set('servletVersion', '4.0.1')
+        set('sentinelVersion', '1.7.1')
+        set('feignVersion', '10.4.0')
+        set('ribbonVersion', '2.3.0')
+        set('httpClientVersion', '4.5.12')
+        set('jwtVersion','0.9.1')
+        set('servletVersion','4.0.1')
+        set('fastjsonVersion','1.2.73')
+        set('slf4jApiVersion','1.7.30')
+        set('jwtVersion','0.11.1')
+        set('userAgentVersion','1.19')
+        set('jsoupVersion','1.11.3')
+        set('thumbnailatorVersion','0.4.12')
+        set('kaptchaVersion','2.3.2')
+        set('poiVersion','4.0.1')
+        set('weappVersion','4.0.4.B')
+        set('projectVersion','1.0-SNAPSHOT')
+        set('springVersion','5.2.12.RELEASE')
+        set('druidVersion','1.1.22')
+        set('securityJoseVersion','5.4.2')
+        set('hutoolVersion','5.5.8')
+    }
+
+    repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenCentral()
+        jcenter()
+    }
+
+//    configurations {
+//        developmentOnly
+//        runtimeClasspath {
+//            extendsFrom developmentOnly
+//        }
+//        compileOnly {
+//            extendsFrom annotationProcessor
+//        }
+//    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+        //  规定版本不导入
+        dependencies {
+            dependency("com.alibaba:druid-spring-boot-starter:${druidVersion}")
+            dependency("org.springframework:spring-context:${springVersion}")
+            dependency("org.springframework:spring-web:${springVersion}")
+            dependency("javax.servlet:javax.servlet-api:${servletVersion}")
+            dependency("me.rocky:cloud-common:${projectVersion}")
+            dependency("com.github.binarywang:weixin-java-miniapp:${weappVersion}")
+            dependency("com.alibaba:fastjson:${fastjsonVersion}")
+            dependency("io.jsonwebtoken:jjwt-api:${jwtVersion}")
+            dependency("io.jsonwebtoken:jjwt-impl:${jwtVersion}")
+            dependency("io.jsonwebtoken:jjwt-jackson:${jwtVersion}")
+            dependency("mysql:mysql-connector-java:${mysqlVersion}")
+            dependency("org.apache.commons:commons-lang3:${commonsLangVersion}")
+            dependency("cn.hutool:hutool-all:${hutoolVersion}")
+            dependency("io.springfox:springfox-swagger2:${swagger2Version}")
+            dependency("io.springfox:springfox-swagger-ui:${swagger2Version}")
+
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        ignoreFailures = true
+    }
+
+    /**
+     * clean 命令时删除 logs 目录
+     */
+    task cleanOutDir(type: Delete) {
+        delete "${projectDir}/logs"
+        delete "${rootDir}/logs"
+    }
+    tasks.clean.dependsOn(cleanOutDir)
+}
+

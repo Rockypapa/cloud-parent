@@ -1,0 +1,37 @@
+apply plugin: 'application'
+apply plugin: "org.springframework.boot"
+
+group 'me.rocky'
+version '1.0-SNAPSHOT'
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+
+dependencies {
+    testCompile("junit:junit:4.12")
+    compile(project(":cloud-common"))
+    compile(project(":cloud-api"))
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
+    implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("com.alibaba:druid-spring-boot-starter")
+    implementation("mysql:mysql-connector-java")
+
+    implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure")
+    implementation("org.springframework.security:spring-security-oauth2-jose")
+
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
+
+    implementation("com.github.binarywang:weixin-java-miniapp")
+    
+    implementation("io.springfox:springfox-swagger2")
+    implementation("io.springfox:springfox-swagger-ui")
+
+}

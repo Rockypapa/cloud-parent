@@ -1,0 +1,12 @@
+rootProject.name = 'cloud-parent'
+include 'cloud-gateway'
+include 'cloud-auth'
+include 'cloud-systema'
+include 'cloud-systemb'
+include 'cloud-common'
+include 'cloud-api'
+rootProject.children.each {project ->
+    project.buildFileName = "${project.name}.gradle"
+}
+
+
