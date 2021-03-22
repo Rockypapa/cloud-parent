@@ -4,7 +4,6 @@ package me.rocky.systema.controller;
 import me.rocky.common.result.Result;
 import me.rocky.constants.AuthConstants;
 import me.rocky.model.AuthMemberDto;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
