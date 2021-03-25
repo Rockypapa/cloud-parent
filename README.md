@@ -9,8 +9,11 @@ params: {  微信登录接口数据
     code: xxx,
     encryptedData: xxx
     grant_type: password
+    username: xxx
+    password: xxx
 }
 地址为  http://{网关:端口}/{授权中心前缀}/oauth/token
+账号密码登录无需 iv/code/encryptedData  微信登录无需username/password 
 ```
 2.请求通过网关的过滤器判断该请求放行，于是将请求路由到认证中心
 3.认证中心首先回拿到header里面的Authorization 解析出clientid以及密码，校验时会根据工程的PasswordEncoder来校验clientid与密码，比如BcryptPasswordEncoder
