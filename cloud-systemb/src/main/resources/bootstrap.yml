@@ -1,5 +1,5 @@
 server:
-  port: 10001
+  port: 10003
 
 spring:
   application:
@@ -7,8 +7,8 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 192.168.31.33:8848  #单机节点
-        namespace: a0187cb0-b9c8-4e92-8776-5d7346a3ab46
+        server-addr: 192.168.69.150:8848   #单机节点
+        namespace: dev-space
         username: nacos
         password: nacos
         group: DEV_GROUP
@@ -16,7 +16,7 @@ spring:
         watch:
           enabled: true
       config:
-        server-addr: 192.168.31.33:8848
-        namespace: a0187cb0-b9c8-4e92-8776-5d7346a3ab46  #必要
+        server-addr: 192.168.69.150:8848
+        namespace: dev-space  #必要
         group: DEV_GROUP  #必要
         file-extension: yaml  #必要

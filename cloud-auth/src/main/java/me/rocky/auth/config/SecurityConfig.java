@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	public static void main(String[] args) {
 //		System.out.println(new BCryptPasswordEncoder().encode("oI_ym5MXrDmQaD_v-yIggHWXi6SM"));
-		System.out.println(Base64.encode("weapp:123456"));
+		System.out.println(Base64.encode("admin:123456"));
 //		System.out.println(new BCryptPasswordEncoder().encode("123456"));
 
 	}

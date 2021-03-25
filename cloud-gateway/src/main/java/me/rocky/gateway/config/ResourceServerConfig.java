@@ -49,6 +49,7 @@ public class ResourceServerConfig {
                 .pathMatchers("/a/test/**").hasAnyRole("user")
                 .pathMatchers("/a/api/**").hasAnyRole("enterprise")
                 .pathMatchers("/a/java/**").hasAnyRole("java")
+                .pathMatchers("/b/api/**").hasAnyRole("enterprise")
                 .anyExchange().authenticated()
                 .and()
                 .exceptionHandling()

@@ -34,7 +34,7 @@ public interface AuthConstants {
      */
     String TOKEN_BLACKLIST_PREFIX = "auth:token:blacklist:";
 
-    String CLIENT_DETAILS_FIELDS = "client_id, CONCAT('{noop}',client_secret) as client_secret, resource_ids, scope, "
+    String CLIENT_DETAILS_FIELDS = "client_id, client_secret, resource_ids, scope, "
             + "authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, "
             + "refresh_token_validity, additional_information, autoapprove";
 
@@ -43,11 +43,6 @@ public interface AuthConstants {
     String FIND_CLIENT_DETAILS_SQL = BASE_CLIENT_DETAILS_SQL + " order by client_id";
 
     String SELECT_CLIENT_DETAILS_SQL = BASE_CLIENT_DETAILS_SQL + " where client_id = ?";
-
-    /**
-     * 密码加密方式
-     */
-    String BCRYPT = "{bcrypt}";
 
     String JWT_USER_ID_KEY = "user_id";
 
@@ -67,13 +62,13 @@ public interface AuthConstants {
     /**
      * 有来商城后台管理客户端ID
      */
-    String ADMIN_CLIENT_ID = "youlai-admin";
+    String ADMIN_CLIENT_ID = "admin";
 
 
     /**
      * 有来商城微信小程序客户端ID
      */
-    String WEAPP_CLIENT_ID = "client";
+    String WEAPP_CLIENT_ID = "weapp";
 
     /**
      * 后台管理接口路径匹配

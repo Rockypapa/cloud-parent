@@ -1,12 +1,13 @@
 package me.rocky.auth.config;
 
 import com.alibaba.fastjson.JSON;
-import me.rocky.auth.constants.AuthConstants;
+
 import me.rocky.auth.domain.User;
 import me.rocky.auth.filter.CustomClientCredentialsTokenEndpointFilter;
 import me.rocky.auth.service.JdbcClientDetailsServiceImpl;
 import me.rocky.common.result.Result;
 import me.rocky.common.result.ResultCode;
+import me.rocky.constants.AuthConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

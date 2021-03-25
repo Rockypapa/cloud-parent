@@ -1,6 +1,6 @@
 ### 框架使用流程
 1.通过网关访问授权中心登录接口 携带信息
-```asp
+```txt
 method: 'post'
 header: 'Authorization': 'Basic d2VhcHA6MTIzNDU2'  //内容为  "Basic "开头的  "weapp:123456" 的base64编码字符串  weapp是clientid
 ,123456是客户端密码

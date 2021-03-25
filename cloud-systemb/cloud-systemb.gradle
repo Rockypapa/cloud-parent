@@ -9,7 +9,8 @@ repositories {
 }
 
 dependencies {
-
+    compile(project(":cloud-api"))
+    compile(project(":cloud-common"))
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")

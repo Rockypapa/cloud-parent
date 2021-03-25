@@ -7,10 +7,11 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.rocky.auth.constants.AuthConstants;
+
 import me.rocky.auth.utils.RequestUtils;
 import me.rocky.base.BaseController;
 import me.rocky.common.exception.BusinessException;
+import me.rocky.constants.AuthConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,9 +31,6 @@ public class AuthController {
 
     @Autowired
     private TokenEndpoint tokenEndpoint;
-
-    @Autowired
-    private WxMaService wxMaServiceForClear;
 
     @Autowired
     private WxMaService wxMaService;

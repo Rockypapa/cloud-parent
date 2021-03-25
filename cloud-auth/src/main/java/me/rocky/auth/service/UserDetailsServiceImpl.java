@@ -1,13 +1,12 @@
 package me.rocky.auth.service;
-
-
-import me.rocky.auth.constants.AuthConstants;
 import me.rocky.auth.domain.User;
+import me.rocky.auth.feign.AdminFeign;
 import me.rocky.auth.feign.MemberFeign;
 import me.rocky.auth.utils.RequestUtils;
 import me.rocky.base.BaseController;
 import me.rocky.common.result.Result;
 import me.rocky.common.result.ResultCode;
+import me.rocky.constants.AuthConstants;
 import me.rocky.model.AuthMemberDto;
 import me.rocky.model.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private MemberFeign memberFeign;
+    @Autowired
+    private AdminFeign adminFeign;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String clientId = RequestUtils.getAuthClientId();
@@ -39,16 +40,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = new User();
         //根据不同的clientid调用不同的处理
         switch (clientId) {
-            case AuthConstants.ADMIN_CLIENT_ID: // 后台用户
-//                Result<UserDto> userRes = userFeignService.getUserByUsername(username);
-//                if (ResultCode.USER_NOT_EXIST.getCode().equals(userRes.getCode())) {
-//                    throw new UsernameNotFoundException(ResultCode.USER_NOT_EXIST.getMsg());
-//                }
-//                UserDto userDTO = userRes.getData();
-//                userDTO.setClientId(clientId);
-//                user = new User(userDTO);
+            case AuthConstants.ADMIN_CLIENT_ID:
+                // 后台用户
+                Result<AuthMemberDto> userRes = adminFeign.managerLogin(username);
+                if (ResultCode.USER_NOT_EXIST.getCode()==userRes.getCode()) {
+                    throw new UsernameNotFoundException(ResultCode.USER_NOT_EXIST.getMessage());
+                }
+                AuthMemberDto authAdminDto = userRes.getData();
+                authAdminDto.setClientId(clientId);
+                user = new User(authAdminDto);
                 break;
-            case AuthConstants.WEAPP_CLIENT_ID: // 小程序会员
+            case AuthConstants.WEAPP_CLIENT_ID:
+                // 小程序会员
                 Result<AuthMemberDto> memberRes = memberFeign.getUserByOpenId(username);
                 if (ResultCode.USER_NOT_EXIST.getCode()==memberRes.getCode()) {
                     throw new UsernameNotFoundException(ResultCode.USER_NOT_EXIST.getMessage());

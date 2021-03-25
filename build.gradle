@@ -93,9 +93,11 @@ subprojects {
         }
         //  规定版本不导入
         dependencies {
+            dependency("org.slf4j:slf4j-api:${slf4jApiVersion}")
             dependency("com.alibaba:druid-spring-boot-starter:${druidVersion}")
             dependency("org.springframework:spring-context:${springVersion}")
             dependency("org.springframework:spring-web:${springVersion}")
+            dependency("org.springframework:spring-webmvc:${springVersion}")
             dependency("javax.servlet:javax.servlet-api:${servletVersion}")
             dependency("me.rocky:cloud-common:${projectVersion}")
             dependency("com.github.binarywang:weixin-java-miniapp:${weappVersion}")

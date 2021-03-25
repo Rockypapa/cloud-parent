@@ -1,5 +1,6 @@
 package me.rocky.auth;
 
+import me.rocky.auth.feign.AdminFeign;
 import me.rocky.auth.feign.MemberFeign;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +17,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackageClasses = {MemberFeign.class})
+@EnableFeignClients(basePackageClasses = {MemberFeign.class, AdminFeign.class})
 public class AuthApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AuthApplication.class);
