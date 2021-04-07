@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,15 +33,25 @@ import java.util.stream.Collectors;
 
 /**
  * 鉴权管理器
+ * AuthorizationManager 和 AuthenticationManager 二选一，我使用的是AuthenticationManager，直接在ResourceServerConfig上配置路径所需权限
+ * AuthorizationManager可配合数据库与缓存对接口进行动态鉴权，数据如pathPermissionMap
  */
 @Component
 public class AuthorizationManager implements   ReactiveAuthorizationManager<AuthorizationContext> {
 
     private static final Logger log = LoggerFactory.getLogger(AuthorizationManager.class);
 
-
-    private RedisTemplate<String,Object> redisTemplate;
-
+    private final Map<String,Object> pathPermissionMap(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("GET_/a/test/a",Arrays.asList("ROLE_user"));
+        map.put("GET_/a/test/b",Arrays.asList("read"));
+        map.put("GET_/a/api/**",Arrays.asList("enterprise"));
+        map.put("GET_/a/java/**",Arrays.asList("ROLE_java"));
+        map.put("GET_/b/api/testRole",Arrays.asList("read"));
+        map.put("GET_/b/api/testRole1",Arrays.asList("ROLE_enterprise"));
+        map.put("GET_/b/api/testPermit",Arrays.asList("read"));
+        return map;
+    }
 
 
     @Override
@@ -73,12 +83,13 @@ public class AuthorizationManager implements   ReactiveAuthorizationManager<Auth
 
 
         // 从缓存取资源权限角色关系列表
-        Map<Object, Object> permissionRoles = redisTemplate.opsForHash().entries(AuthConstants.PERMISSION_ROLES_KEY);
-        Iterator<Object> iterator = permissionRoles.keySet().iterator();
+        Map<String, Object> permissionRoles = pathPermissionMap();
+        // .PERMISSION_ROLES_KEY);
+        Iterator<String> iterator = permissionRoles.keySet().iterator();
         // 请求路径匹配到的资源需要的角色权限集合authorities统计
         Set<String> authorities = new HashSet<>();
         while (iterator.hasNext()) {
-            String pattern = (String) iterator.next();
+            String pattern = iterator.next();
             if (pathMatcher.match(pattern, path)) {
                 authorities.addAll(Convert.toList(String.class, permissionRoles.get(pattern)));
             }

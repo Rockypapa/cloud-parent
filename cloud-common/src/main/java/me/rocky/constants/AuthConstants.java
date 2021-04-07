@@ -54,6 +54,11 @@ public interface AuthConstants {
     String AUTHORITY_PREFIX = "ROLE_";
 
     /**
+     * JWT存储权限前缀
+     */
+    String AUTHORITY_EMPTY_PREFIX = "";
+
+    /**
      * JWT存储权限属性
      */
     String JWT_AUTHORITIES_KEY = "authorities";
@@ -73,5 +78,5 @@ public interface AuthConstants {
     /**
      * 后台管理接口路径匹配
      */
-    String ADMIN_URL_PATTERN = "*_/youlai-admin/**";
+    String ADMIN_URL_PATTERN = "*_/b/**";
 }

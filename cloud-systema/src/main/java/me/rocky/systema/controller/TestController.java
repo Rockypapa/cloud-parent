@@ -19,6 +19,12 @@ public class TestController {
 	@GetMapping("/a")
 	public String a(){
 		System.out.println(BaseController.getRequest().getHeader("x-username"));
-		return "asdsads";
+		return "this is role test";
+	}
+
+	@GetMapping("/b")
+	public String b(){
+		System.out.println(BaseController.getRequest().getHeader("x-username"));
+		return "this is permission test";
 	}
 }

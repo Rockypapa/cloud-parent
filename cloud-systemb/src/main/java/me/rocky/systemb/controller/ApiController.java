@@ -25,4 +25,23 @@ public class ApiController {
 	public Result<?> getData(@RequestParam("val")String val){
 		return 	weappFeign.getData(val);
 	}
+	@GetMapping("/testRole")
+	public Result<?> testRole(){
+		return Result.success("this is read role ");
+	}
+
+	@GetMapping("/testPermit")
+	public Result<?> testPermit(){
+		return Result.success("this is user  authority ");
+	}
+
+	@GetMapping("/testPermit1")
+	public Result<?> testPermit1(){
+		return Result.success("this is enterprise  authority ");
+	}
+
+	@GetMapping("/testPermit2")
+	public Result<?> testPermit2(){
+		return Result.success("this is read  authority ");
+	}
 }

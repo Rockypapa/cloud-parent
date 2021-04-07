@@ -30,7 +30,7 @@ public class LoginController {
 				.setStatus(true)
 				.setUsername(username)
 				.setPassword("$2a$10$r9nDINxC8UfTxYooMGblruFkvLEzVQPmh.Wiv5CGzXfX8qbYAepgC")
-				.setRoles(Arrays.asList("user","enterprise"));
+				.setRoles(Arrays.asList("enterprise","user","ROLE_read","read"));
 		return Result.success(dto);
 	}
 }

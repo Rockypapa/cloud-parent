@@ -43,3 +43,4 @@ cmd:  keytool -genkey -alias [密钥别名] -keyalg [密钥算法] -keypass [密
 2.设置过滤规则 参考 cloud-gateway\src\main\java\me\rocky\gateway\filter\AuthGlobalFilter.java
 3.权限获取规则 获取token中的权限信息，参考 cloud-gateway\src\main\java\me\rocky\gateway\security\SecurityContextRepository.java
 4.配置资源服务以及权限放行规则  参考cloud-gateway\src\main\java\me\rocky\gateway\config\ResourceServerConfig
+5.获取公钥,可通过访问

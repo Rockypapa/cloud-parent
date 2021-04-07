@@ -3,22 +3,22 @@ package me.rocky.gateway.security;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.nimbusds.jose.JWSObject;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
+import me.rocky.common.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
 import java.security.PublicKey;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
  * @createDate 2021/3/19 15:40
  * @log
  */
+@Primary
 @Component("authenticationManager")
 public class AuthenticationManager implements ReactiveAuthenticationManager {
 
@@ -39,7 +40,6 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 	@Override
 	public Mono<Authentication> authenticate(Authentication authentication) {
 		String token=authentication.getCredentials().toString();
-		System.out.println("manager token: "+token);
 		try {
 			Claims claims = parseToken(token);
 			//todo 此处应该列出token中携带的角色表。
@@ -47,26 +47,31 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 			try {
 				jwsObject = JWSObject.parse(token);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				return Mono.error(new BusinessException("token异常"));
 			}
 			String payload = jwsObject.getPayload().toString();
 			JSONObject jsonObject = JSONUtil.parseObj(payload);
 
 			List<String> roles = jsonObject.getJSONArray("authorities").toList(String.class);
+			System.out.println(roles.toString());
 			Authentication authentications=new UsernamePasswordAuthenticationToken(
 					claims.getId(),
 					null,
-					roles.stream().map(role->new SimpleGrantedAuthority(role)).collect(Collectors.toList())
+					roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
 			);
 			return Mono.just(authentications);
-		} catch (Exception e) {
-			throw  new BadCredentialsException(e.getMessage());
+		}catch (ExpiredJwtException e){
+			return Mono.error(new BusinessException("token失效"));
+		}catch(UnsupportedJwtException | MalformedJwtException e){
+			return Mono.error(new BusinessException("token格式不正确"));
+		}catch(SignatureException e){
+			return Mono.error(new BusinessException("签名异常"));
+		}catch (IllegalArgumentException e){
+			return Mono.error(new BusinessException("token异常"));
 		}
 	}
-
 	private Claims parseToken(String token){
-		Jwt<JwsHeader, Claims> parseClaimsJwt = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
-		Claims claims = parseClaimsJwt.getBody();
-		return claims;
+		Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token);
+		return claimsJws.getBody();
 	}
 }

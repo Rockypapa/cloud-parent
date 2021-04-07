@@ -3,14 +3,17 @@ package me.rocky.gateway.config;
 
 import me.rocky.common.result.ResultCode;
 import me.rocky.constants.AuthConstants;
-import me.rocky.gateway.security.AuthorizationManager;
+import me.rocky.gateway.security.AuthenticationManager;
+//import me.rocky.gateway.security.AuthorizationManager;
 import me.rocky.gateway.security.SecurityContextRepository;
 import me.rocky.gateway.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -28,28 +31,43 @@ import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 public class ResourceServerConfig {
-
-    @Autowired
-    private AuthorizationManager authorizationManager;
 
     @Autowired
     private WhiteListConfig whiteListConfig;
 
     @Autowired
+    @Qualifier(value = "authenticationManager")
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     private SecurityContextRepository securityContextRepository;
+
+//    @Autowired
+//    private AuthorizationManager authorizationManager;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
         http.oauth2ResourceServer().authenticationEntryPoint(authenticationEntryPoint());
-        http.securityContextRepository(securityContextRepository)
+        http.
+                // 这两行要不要都无所谓，从效果上来看就是个打印日志的类
+                securityContextRepository(securityContextRepository)
+                .authenticationManager(authenticationManager)
+
                 .authorizeExchange()
                 .pathMatchers(whiteListConfig.getUrls()).permitAll()
-                .pathMatchers("/a/test/**").hasAnyRole("user")
+                .pathMatchers("/a/test/a").hasAnyRole("user")
+                .pathMatchers("/a/test/b").hasAnyAuthority("read")
                 .pathMatchers("/a/api/**").hasAnyRole("enterprise")
                 .pathMatchers("/a/java/**").hasAnyRole("java")
-                .pathMatchers("/b/api/**").hasAnyRole("enterprise")
+                .pathMatchers("/b/api/testRole").hasAnyRole("read")
+                .pathMatchers("/b/api/testPermit").hasAnyAuthority("user")
+                .pathMatchers("/b/api/testPermit1").hasAnyAuthority("enterprise")
+                .pathMatchers("/b/api/testPermit2").hasAnyAuthority("read")
+                // 如果使用authorizationManager 则弃用上面的 securityContextRepository authenticationManager
+//                .anyExchange().access(authorizationManager)
                 .anyExchange().authenticated()
                 .and()
                 .exceptionHandling()
@@ -94,11 +112,12 @@ public class ResourceServerConfig {
      * ServerHttpSecurity没有将jwt中authorities的负载部分当做Authentication
      * 需要把jwt的Claim中的authorities加入
      * 方案：重新定义R 权限管理器，默认转换器JwtGrantedAuthoritiesConverter
+     * 该bean的作用是在获取了token以及里面的权限之后
      */
     @Bean
     public Converter<Jwt, ? extends Mono<? extends AbstractAuthenticationToken>> jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix(AuthConstants.AUTHORITY_PREFIX);
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix(AuthConstants.AUTHORITY_EMPTY_PREFIX);
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName(AuthConstants.JWT_AUTHORITIES_KEY);
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);

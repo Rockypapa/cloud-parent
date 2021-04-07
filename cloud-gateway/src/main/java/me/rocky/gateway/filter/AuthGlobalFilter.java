@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.data.redis.core.RedisTemplate;
+//import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -33,8 +33,8 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     private static final Logger log = LoggerFactory.getLogger(AuthGlobalFilter.class);
 
 
-    @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+//    @Autowired
+//    private RedisTemplate<String,Object> redisTemplate;
 
     // 是否演示环境
     @Value("${demo:false}")

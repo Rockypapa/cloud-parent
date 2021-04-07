@@ -31,7 +31,7 @@ public class LoginController {
 			.setStatus(true)
 			.setUsername("oI_ym5MXrDmQaD_v-yIggHWXi6SM")
 			.setPassword("$2a$10$hUjxi.I9YGYYJPfUzZ8LAuSrSxR.9k88UqiKxWymKb/A7eFO9qqLO")
-			.setRoles(Arrays.asList("user","enterprise"));
+			.setRoles(Arrays.asList("ROLE_user","enterprise"));
 		return Result.success(dto);
 	}
 }
